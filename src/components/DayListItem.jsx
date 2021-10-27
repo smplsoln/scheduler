@@ -6,7 +6,10 @@ export default function DayListItem(props) {
   console.log({props});
 
   const dayName = props.name;
-  const spotsRemaining = props.spots;
+  const spotsRemaining = props.spots === 0 ? "no spots"
+      : props.spots === 1 ? "1 spot"
+      : props.spots + " spots";
+
   const setNameAction = props.setDay ? props.setDay : () => 'DayListItem clicked:' + dayName;
 
   const dayClassNames = classNames("day-list__item", {
@@ -18,7 +21,7 @@ export default function DayListItem(props) {
   return (
     <li className={dayClassNames} onClick={() => setNameAction(dayName)}>
       <h2 className="text--regular">{dayName}</h2>
-      <h2 className="text--light">{spotsRemaining} spots remaining</h2>
+      <h2 className="text--light">{spotsRemaining} remaining</h2>
     </li>
   );
 }
