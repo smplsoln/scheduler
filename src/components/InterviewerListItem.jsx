@@ -2,8 +2,6 @@ import React from 'react';
 // import {useState} from 'react';
 import classNames from 'classnames';
 
-// import "InterviewerListItem.scss";
-
 import 'components/InterviewerListItem.scss';
 
 export default function InterviewListItem(props) {

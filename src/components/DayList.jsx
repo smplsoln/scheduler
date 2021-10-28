@@ -6,8 +6,8 @@ export default function DayList(props) {
   console.log({ props });
 
   const days = props.days;
-  const selectedDay = props.day;
-  const setDay = props.setDay;
+  const selectedDay = props.value;
+  const setDay = props.onChange;
   const dayListItems = [];
 
   for (const day of days) {
