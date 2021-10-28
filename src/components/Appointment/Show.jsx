@@ -4,6 +4,7 @@ export default function Show(props) {
 
   const studentName = props.student;
   const interviewer = props.interviewer;
+  const interviewerName = interviewer ? interviewer.name : "";
   const onEdit = props.onEdit;
   const onDelete = props.onDelete;
 
@@ -13,7 +14,7 @@ export default function Show(props) {
         <h2 className="text--regular">{studentName}</h2>
         <section className="interviewer">
           <h4 className="text--light">Interviewer</h4>
-          <h3 className="text--regular">{interviewer.name}</h3>
+          <h3 className="text--regular">{interviewerName}</h3>
         </section>
       </section>
       <section className="appointment__card-right">
