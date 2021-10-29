@@ -1,28 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import "components/Application.scss";
+import axios from "axios";
 
+import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
-
-const days = [
-  {
-    id: 1,
-    name: "Monday",
-    spots: 2,
-  },
-  {
-    id: 2,
-    name: "Tuesday",
-    spots: 5,
-  },
-  {
-    id: 3,
-    name: "Wednesday",
-    spots: 0,
-  },
-];
-
 
 const appointments = [
   {
@@ -63,10 +45,32 @@ const appointments = [
   }
 ];
 
-export default function Application(props) {
-  const [day, setDay] = useState("Monday");
-  console.log({ day });
+const apiServer = "http://localhost:8001";
+const appointmentsUrl = "/api/appointments";
+const daysUrl = "/api/days";
+const interviewersUrl = "/api/interviewers"
 
+export default function Application(props) {
+  // state for selected day
+  const [day, setDay] = useState("Monday");
+  // state for all available days from server
+  const [days, setDays] = useState([]);
+  console.log({ days });
+
+  useEffect(() => {
+    const url = apiServer + daysUrl;
+    console.log("GET ",{url});
+    axios.get(url)
+    .then((res) => {
+      console.log({res});
+      const data = res.data;
+      console.log("result of GET ", {url}, {data});
+      setDays([...data]);
+    })
+    .catch((err) => {
+      console.log("error in GET ",{url}, {err});
+    })
+  }, []) // [] dependency arr means only once at start/first time
 
   const appointmentComponents = appointments.map(
     appointment => {
