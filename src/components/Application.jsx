@@ -51,11 +51,29 @@ const daysUrl = "/api/days";
 const interviewersUrl = "/api/interviewers"
 
 export default function Application(props) {
-  // state for selected day
-  const [day, setDay] = useState("Monday");
-  // state for all available days from server
-  const [days, setDays] = useState([]);
-  console.log({ days });
+
+  // combined state for day, days, appointments
+  const [state, setState] = useState(
+    {
+      // state for selected day
+      day: "Monday",
+      // state for all available days from server
+      days: [],
+      // state for all appointments
+      appointments: {}
+    }
+  );
+
+  console.log({state});
+
+  // set day in state
+  const setDay = (dayName) => {
+    setState((prevState) => {
+      return {...prevState, day: dayName};
+    });
+  };
+
+  console.log( "Days: ", state.days );
 
   useEffect(() => {
     const url = apiServer + daysUrl;
@@ -65,7 +83,10 @@ export default function Application(props) {
       console.log({res});
       const data = res.data;
       console.log("result of GET ", {url}, {data});
-      setDays([...data]);
+
+      setState((prevState) => {
+        return {...prevState, days: [...data]};
+      });
     })
     .catch((err) => {
       console.log("error in GET ",{url}, {err});
@@ -99,8 +120,8 @@ export default function Application(props) {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList
-            days={days}
-            value={day}
+            days={state.days}
+            value={state.day}
             onChange={setDay}
           />
         </nav>
