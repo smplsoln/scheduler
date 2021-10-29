@@ -5,7 +5,7 @@ import axios from "axios";
 import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 
 const apiServer = "http://localhost:8001";
 const daysUrl = apiServer + "/api/days";
@@ -60,13 +60,15 @@ export default function Application(props) {
   dailyAppointments = getAppointmentsForDay(state, state.day);
   const appointmentComponents = dailyAppointments.map(
     appointment => {
+      const interviewObj = getInterview(state, appointment.interview);
+      // console.log({interviewObj});
       return (
         <Appointment
           key={appointment.id}
-          // id={appointment.id}
-          // time={appointment.time}
-          // interview={appointment.interview}
-          {...appointment}
+          id={appointment.id}
+          time={appointment.time}
+          interview={interviewObj}
+          // {...appointment}
         />);
     });
   appointmentComponents.push(<Appointment key="last" time="5pm" />);

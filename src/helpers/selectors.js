@@ -19,3 +19,14 @@ export function getAppointmentsForDay(state, day) {
   }
   return appointmentsForDay;
 }
+
+export function getInterview(state, interview) {
+  if (!interview) {
+    return null;
+  }
+  //... returns an array of appointments for that day
+  let transformedInterview = {...interview};
+  const interviewerObj = state.interviewers[interview.interviewer];
+  transformedInterview["interviewer"] = interviewerObj;
+  return transformedInterview;
+}
