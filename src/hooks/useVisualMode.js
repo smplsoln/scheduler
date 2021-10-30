@@ -9,7 +9,7 @@ const useVisualMode = (initMode) => {
   console.log({prevMode});
 
   const transition = (nextMode, doReplace) => {
-    if(!doReplace) {
+    if(!doReplace) { // if replace, skip saving current mode
       prevMode.push(mode);
     }
     setMode(nextMode);

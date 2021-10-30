@@ -14,10 +14,31 @@ export function getAppointmentsForDay(state, day) {
     return appointmentsForDay;
   }
 
-  for (const apoId of daysAppointments) {
-    appointmentsForDay.push(state.appointments[apoId]);
+  for (const interviewerId of daysAppointments) {
+    appointmentsForDay.push(state.appointments[interviewerId]);
   }
   return appointmentsForDay;
+}
+
+export function getInterviewersForDay(state, day) {
+  let interviewersForDay = [];
+  let daysInterviewers = [];
+
+  for (const curDay of state.days) {
+    if (curDay.name === day) {
+      daysInterviewers = curDay.interviewers;
+      break;
+    }
+  }
+
+  if (!daysInterviewers.length) {
+    return interviewersForDay;
+  }
+
+  for (const interviewerId of daysInterviewers) {
+    interviewersForDay.push(state.interviewers[interviewerId]);
+  }
+  return interviewersForDay;
 }
 
 export function getInterview(state, interview) {

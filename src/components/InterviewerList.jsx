@@ -9,11 +9,12 @@ export default function InterviewerList(props) {
   const interviewerListItems = [];
 
   for (const interviewer of props.interviewers) {
+    let isSelected = (interviewer) && (props.value) ? props.value.id === interviewer.id : false;
     interviewerListItems.push(<InterviewerListItem
       key = {interviewer.id}
       name={interviewer.name}
       avatar={interviewer.avatar}
-      selected={props.value === interviewer.id}
+      selected={isSelected}
       setInterviewer={() => props.onChange(interviewer.id)}
     />);
   }

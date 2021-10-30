@@ -5,11 +5,13 @@ import InterviewerList from "components/InterviewerList";
 import Button from "components/Button";
 
 export default function Form(props) {
+  console.log("Form props: ", {props});
   const studentName = props.student ? props.student : "";
   const interviewers = props.interviewers;
   const selectedInterviewer = props.interviewer;
 
   const [formState, setFormState] = useState({ interviewer: selectedInterviewer, student: studentName });
+  console.log("Form state: ", {formState});
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
