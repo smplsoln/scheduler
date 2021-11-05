@@ -46,6 +46,33 @@ export default function Application(props) {
     // only once at start/first time
   }, []);
 
+  const bookInterview = (id, interview) => {
+    console.log("Current appointment state: ", state.appointments[id]);
+    console.log("Book Interview ", id, interview);
+    // create new appointment update obj
+    const appointment = {
+      ...state.appointments[id],
+      interview: {
+        ...state.appointments[id].interview,
+        ...interview
+        // interviewer: interview.interviewer.id
+      }
+    };
+    console.log("Updated appointment state obj: ", appointment);
+
+    // create new updated appointments array
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    // update the state with new state
+    setState((prevState) => ({
+      ...prevState,
+      appointments: { ...appointments }
+    }));
+
+  };
 
   // set day in state
   const setDay = (dayName) => {
@@ -60,8 +87,10 @@ export default function Application(props) {
   let daysInterviewers = getInterviewersForDay(state, state.day);
   const appointmentComponents = dailyAppointments.map(
     appointment => {
-      const interviewObj = getInterview(state, appointment.interview);
-      // console.log({interviewObj});
+      console.log("appointment interview in state: ", appointment.interview);
+      const interviewObj = getInterview(state, appointment.interview)
+      // interviewObj =  interviewObj ? interviewObj : appointment.interview;
+      console.log("Appointment", appointment.id, " interviewObj: ", {interviewObj});
       return (
         <Appointment
           key={appointment.id}
@@ -69,6 +98,7 @@ export default function Application(props) {
           time={appointment.time}
           interview={interviewObj}
           interviewers={daysInterviewers}
+          bookInterview={bookInterview}
           // {...appointment}
         />);
     });

@@ -10,7 +10,7 @@ export default function Form(props) {
   const interviewers = props.interviewers;
   const selectedInterviewer = props.interviewer;
 
-  const [formState, setFormState] = useState({ interviewer: selectedInterviewer, student: studentName });
+  const [formState, setFormState] = useState({ interviewers: interviewers, interviewer: selectedInterviewer, student: studentName });
   console.log("Form state: ", {formState});
 
   const handleFormSubmit = (event) => {
@@ -19,11 +19,12 @@ export default function Form(props) {
     // handleSave();
   };
 
-  const handleSave = () => {
-    let studentInput = formState.student;
-    let interviewerId = formState.interviewer;
+  const handleSave = (event) => {
+    console.log("Form Save event: ", event);
+    let student = formState.student;
+    let interviewer = formState.interviewer;
 
-    return props.onSave(studentInput, interviewerId);
+    return props.onSave(student, interviewer);
   };
 
   const handleCancel = () => {
@@ -37,9 +38,19 @@ export default function Form(props) {
     setFormState({ ...formState, student: studentNameInput });
   };
 
+  const getInterviewerForId = (state, id) => {
+    for (const interviewer of state.interviewers) {
+      if (id === interviewer.id) {
+        return interviewer;
+      }
+    }
+  }
+
   const setInterviewer = (updatedInterviewer) => {
-    console.log({ updatedInterviewer });
-    setFormState({ ...formState, interviewer: updatedInterviewer })
+    console.log("set interviewer: ", updatedInterviewer);
+    const selectedInterviewer = getInterviewerForId(formState, updatedInterviewer);
+    console.log("Interviewer selected: ", selectedInterviewer);
+    setFormState({ ...formState, interviewer: selectedInterviewer})
   };
 
   return (

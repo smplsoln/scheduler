@@ -12,8 +12,24 @@ export default function Appointment(props) {
   // const title = props.time ? "Appointment at " + props.time
   //     : "No Appointments"
 
+  console.log("Appointment props: ", props);
+
   const initVisualMode = props.interview ? VISUAL_MODE.SHOW : VISUAL_MODE.EMPTY;
   const {mode, transition, back} = useVisualMode(initVisualMode);
+
+  const save = (name, interviewer) => {
+    const interview = {
+      student: name,
+      interviewer: interviewer.id
+    };
+
+    console.log("Book Interview: ", interview, " for appointment", props.id);
+    props.bookInterview(props.id, interview);
+
+    console.log("Transition to SHOW mode:", mode);
+    transition(VISUAL_MODE.SHOW);
+    console.log("Mode now: ", mode);
+  };
 
   const handleAdd = () => {
     console.log("Clicked onAdd, current mode: ", {mode});
@@ -56,14 +72,14 @@ export default function Appointment(props) {
               // student=""
               interviewers={props.interviewers}
               // interviewer={null}
-              onSave={props.onSave}
-              onCancel={handleCancel}s
+              onSave={save}
+              onCancel={handleCancel}
           />
           : (mode === VISUAL_MODE.FORM.EDIT) ? <Form
               student={props.interview.student}
               interviewer={props.interview.interviewer}
               interviewers={props.interviewers}
-              onSave={props.onSave}
+              onSave={save}
               onCancel={handleCancel}
           />
           : {}
