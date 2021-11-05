@@ -5,6 +5,7 @@ import Show from "components/Appointment/Show";
 import Empty from "components/Appointment/Empty";
 import Status from "components/Appointment/Status";
 import Confirm from "components/Appointment/Confirm";
+import Error from "components/Appointment/Error";
 import useVisualMode from 'hooks/useVisualMode';
 import VISUAL_MODE from 'Constants';
 import Form from './Form';
@@ -26,44 +27,64 @@ export default function Appointment(props) {
     };
 
     console.log("Transition to STATUS.SAVING...");
-    transition(VISUAL_MODE.STATUS.SAVING);
+    transition(VISUAL_MODE.STATUS.SAVING, true);
 
     console.log("Book Interview: ", interview, " for appointment", props.id);
-    const bookInterviewPromise = props.bookInterview(props.id, interview);
+    props.bookInterview(props.id, interview)
+      .then(() => {
+        console.log("Transition to SHOW mode:", mode);
+        transition(VISUAL_MODE.SHOW, true);
+        console.log("Mode now after booking interview: ", mode);
+      })
+      .catch(err => {
+        console.error("Error saving interview appointment.", err);
+        transition(VISUAL_MODE.ERROR_SAVE, true);
+      })
+      .finally(() => {
+        console.log("Completed Saving flow.");
+      });
+  };
 
-    bookInterviewPromise.finally(() => {
-      console.log("Transition to SHOW mode:", mode);
-      transition(VISUAL_MODE.SHOW);
-      console.log("Mode now after booking interview: ", mode);
-    })
-
+  const handleSaveErrorClose = () => {
+    console.log("Handle close of saving error dialog.");
+    back();
   };
 
   const handleAdd = () => {
     console.log("Clicked onAdd, current mode: ", {mode});
     transition(VISUAL_MODE.FORM.CREATE);
     return;
-    // return props.onAdd();
   };
   const handleEdit = () => {
     console.log("Clicked onEdit, current mode: ", {mode});
     transition(VISUAL_MODE.FORM.EDIT);
     return;
-    // return props.onEdit();
   };
   const handleDelete = () => {
     console.log("Clicked onDelete, current mode: ", {mode});
     console.log("Transition to STATUS.DELETING...");
-    transition(VISUAL_MODE.STATUS.DELETING);
+    transition(VISUAL_MODE.STATUS.DELETING, true);
 
     console.log("Cancel/Delete interview in appointment: ", props.id);
     props.cancelInterview(props.id)
-    .finally(() => {
-      console.log("Transition to EMPTY mode:", mode);
-      transition(VISUAL_MODE.EMPTY);
-      console.log("Mode now after setting to EMPTY after deleting interview: ", mode);
-    })
+      .then(() => {
+        console.log("Transition to EMPTY mode:", mode);
+        transition(VISUAL_MODE.EMPTY, true);
+        console.log("Mode now after setting to EMPTY after deleting interview: ", mode);
+      })
+      .catch(err => {
+        console.error("Error deleting interview appointment.", err);
+        transition(VISUAL_MODE.ERROR_DELETE, true);
+      })
+      .finally(() => {
+        console.log("Completed delete flow.");
+      });
     return;
+  };
+
+  const handleDeleteErrorClose = () => {
+    console.log("Handle close of delete error dialog.");
+    back();
   };
 
   const handleCancel = () => {
@@ -73,7 +94,7 @@ export default function Appointment(props) {
     // return props.onCancel();
   };
 
-  const handleShowConfirm = () => {
+  const handleConfirmDelete = () => {
     console.log("Transition to show Confirm dialog...");
     transition(VISUAL_MODE.CONFIRM);
     return;
@@ -87,7 +108,7 @@ export default function Appointment(props) {
               student={props.interview.student}
               interviewer={props.interview.interviewer}
               onEdit={handleEdit}
-              onDelete={handleShowConfirm}
+              onDelete={handleConfirmDelete}
             />
           : (mode === VISUAL_MODE.EMPTY) ? <Empty onAdd={handleAdd}/>
           : (mode === VISUAL_MODE.FORM.CREATE) ? <Form
@@ -114,6 +135,14 @@ export default function Appointment(props) {
               message='Please confirm if you want to delete appointment.'
               onCancel={handleCancel}
               onConfirm={handleDelete}
+          />
+          : (mode === VISUAL_MODE.ERROR_SAVE) ? <Error
+              message='Error saving interview appointment!'
+              onClose={handleSaveErrorClose}
+          />
+          : (mode === VISUAL_MODE.ERROR_DELETE) ? <Error
+              message='Error deleting interview appointment!'
+              onClose={handleDeleteErrorClose}
           />
           : {}
           )

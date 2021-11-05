@@ -80,6 +80,7 @@ export default function Application(props) {
       })
       .catch(err => {
         console.error(err);
+        throw err;
     });
   };
 
@@ -113,7 +114,8 @@ export default function Application(props) {
       })
       .catch(err => {
         console.error(err);
-    });
+        throw err;
+      });
   };
 
   // set day in state
