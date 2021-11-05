@@ -66,11 +66,13 @@ export default function Application(props) {
       [id]: appointment
     };
 
-
+    // update the interview in the appointment
+    // in backend using appointments PUT api
     return axios.put( appointmentsUrl + "/" + appointment.id, appointment)
       .then(res => {
         console.log("Response of appointment PUT: ", res);
 
+        // update the state with new state
         setState((prevState) => ({
           ...prevState,
           appointments: { ...appointments }
@@ -79,8 +81,39 @@ export default function Application(props) {
       .catch(err => {
         console.error(err);
     });
-    // update the state with new state
+  };
 
+  const cancelInterview = (id) => {
+    console.log("Current appointment state: ", state.appointments[id]);
+    console.log("Cancel interview in appointment", id);
+    // delete interview in appointment object
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    console.log("Appointment state obj after interview delete: ", appointment);
+
+    // create new updated appointments array
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    // update the interview in the appointment
+    // in backend using appointments DELETE api
+    return axios.delete( appointmentsUrl + "/" + appointment.id)
+      .then(res => {
+        console.log("Response of appointment's interview DELETE: ", res);
+
+        // update the state with new state
+        setState((prevState) => ({
+          ...prevState,
+          appointments: { ...appointments }
+        }));
+      })
+      .catch(err => {
+        console.error(err);
+    });
   };
 
   // set day in state
@@ -108,6 +141,7 @@ export default function Application(props) {
           interview={interviewObj}
           interviewers={daysInterviewers}
           bookInterview={bookInterview}
+          cancelInterview={cancelInterview}
           // {...appointment}
         />);
     });
