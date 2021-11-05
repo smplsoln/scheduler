@@ -42,6 +42,14 @@ const useApplicationData = () => {
   const bookInterview = (id, interview) => {
     console.log("Current appointment state: ", state.appointments[id]);
     console.log("Book Interview ", id, interview);
+
+    // determine tentative change in number of spots
+    // if the appointment in state already has an interview
+    // then this interview appointment save is an update of that interview
+    // else this is a create of interview appointment so available spots
+    // for this day have reduced by 1
+    const spotsChange = state.appointments[id].interview ? 0 : 1;
+
     // create new appointment update obj
     const appointment = {
       ...state.appointments[id],
@@ -65,9 +73,19 @@ const useApplicationData = () => {
       .then(res => {
         console.log("Response of appointment PUT: ", res);
 
+        const dayObj = getDayForName(state, state.day);
+        const spots = dayObj.spots - spotsChange;
+        const newDayObj = {
+          ...dayObj,
+          spots: spots
+        }
+        const days = [...state.days];
+        days[newDayObj.id - 1] = newDayObj;
+
         // update the state with new state
         setState((prevState) => ({
           ...prevState,
+          days: [ ...days ],
           appointments: { ...appointments }
         }));
       })
@@ -75,6 +93,15 @@ const useApplicationData = () => {
         console.error(err);
         throw err;
     });
+  };
+
+  const getDayForName = (state, name) => {
+    for (const day of state.days) {
+      if (day.name === name) {
+        return {...day};
+      }
+    }
+    return null;
   };
 
   const cancelInterview = (id) => {
@@ -99,9 +126,23 @@ const useApplicationData = () => {
       .then(res => {
         console.log("Response of appointment's interview DELETE: ", res);
 
+        // update the spots remaining for the day
+        const dayObj = getDayForName(state, state.day);
+
+        // since the  interview appointment iss successful
+        // that spot has now become available so add it to days spots
+        const spots = 1 + dayObj.spots;
+        const newDayObj = {
+          ...dayObj,
+          spots: spots
+        }
+        const days = [...state.days];
+        days[newDayObj.id - 1] = newDayObj;
+
         // update the state with new state
         setState((prevState) => ({
           ...prevState,
+          days: [ ...days ],
           appointments: { ...appointments }
         }));
       })
