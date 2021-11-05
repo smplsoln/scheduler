@@ -3,6 +3,7 @@ import "components/Appointment/styles.scss";
 import Header from "components/Appointment/Header";
 import Show from "components/Appointment/Show";
 import Empty from "components/Appointment/Empty";
+import Status from "components/Appointment/Status";
 import useVisualMode from 'hooks/useVisualMode';
 import VISUAL_MODE from 'Constants';
 import Form from './Form';
@@ -23,12 +24,19 @@ export default function Appointment(props) {
       interviewer: interviewer.id
     };
 
-    console.log("Book Interview: ", interview, " for appointment", props.id);
-    props.bookInterview(props.id, interview);
+    console.log("Transition to STATUS.SAVING.");
+    transition(VISUAL_MODE.STATUS.SAVING);
 
-    console.log("Transition to SHOW mode:", mode);
-    transition(VISUAL_MODE.SHOW);
-    console.log("Mode now: ", mode);
+    console.log("Book Interview: ", interview, " for appointment", props.id);
+    const bookInterviewPromise = props.bookInterview(props.id, interview);
+
+    bookInterviewPromise.finally(() => {
+
+      console.log("Transition to SHOW mode:", mode);
+      transition(VISUAL_MODE.SHOW);
+      console.log("Mode now: ", mode);
+    })
+
   };
 
   const handleAdd = () => {
@@ -81,6 +89,12 @@ export default function Appointment(props) {
               interviewers={props.interviewers}
               onSave={save}
               onCancel={handleCancel}
+          />
+          : (mode === VISUAL_MODE.STATUS.SAVING) ? <Status
+              message='Saving Appointment'
+              />
+          : (mode === VISUAL_MODE.STATUS.DELETING) ? <Status
+              message='Deleting Appointment'
           />
           : {}
           )

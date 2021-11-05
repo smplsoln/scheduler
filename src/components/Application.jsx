@@ -66,11 +66,20 @@ export default function Application(props) {
       [id]: appointment
     };
 
+
+    return axios.put( appointmentsUrl + "/" + appointment.id, appointment)
+      .then(res => {
+        console.log("Response of appointment PUT: ", res);
+
+        setState((prevState) => ({
+          ...prevState,
+          appointments: { ...appointments }
+        }));
+      })
+      .catch(err => {
+        console.error(err);
+    });
     // update the state with new state
-    setState((prevState) => ({
-      ...prevState,
-      appointments: { ...appointments }
-    }));
 
   };
 
