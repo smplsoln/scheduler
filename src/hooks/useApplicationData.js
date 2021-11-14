@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import { proxy } from "../../package.json";
 
 const useApplicationData = () => {
   // combined state for day, days, appointments
@@ -15,7 +15,8 @@ const useApplicationData = () => {
     }
   );
 
-  const apiServer = "http://localhost:8001";
+  console.log({proxy});
+  const apiServer = proxy || "http://localhost:8001";
   const daysUrl = apiServer + "/api/days";
   const appointmentsUrl = apiServer + "/api/appointments";
   const interviewersUrl = apiServer + "/api/interviewers";

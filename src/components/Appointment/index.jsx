@@ -12,8 +12,6 @@ import Form from './Form';
 
 
 export default function Appointment(props) {
-  // const title = props.time ? "Appointment at " + props.time
-  //     : "No Appointments"
 
   console.log("Appointment props: ", props);
 
@@ -21,13 +19,25 @@ export default function Appointment(props) {
   const {mode, transition, back} = useVisualMode(initVisualMode);
 
   const save = (name, interviewer) => {
+
+    if(!name) {
+      console.log("Name cannot be empty!");
+      transition(VISUAL_MODE.ERROR_NAME_EMPTY);
+      return;
+    }
+    if(!interviewer || !interviewer.id) {
+      console.log("Interviewer has to be selected!");
+      transition(VISUAL_MODE.ERROR_INTERVIEWER_NOT_SELECTED);
+      return;
+    }
+
     const interview = {
       student: name,
       interviewer: interviewer.id
     };
 
     console.log("Transition to STATUS.SAVING...");
-    transition(VISUAL_MODE.STATUS.SAVING, true);
+    transition(VISUAL_MODE.STATUS.SAVING);
 
     console.log("Book Interview: ", interview, " for appointment", props.id);
     props.bookInterview(props.id, interview)
@@ -46,6 +56,16 @@ export default function Appointment(props) {
   };
 
   const handleSaveErrorClose = () => {
+    console.log("Handle close of saving error dialog.");
+    back();
+  };
+
+  const handleNameErrorClose = () => {
+    console.log("Handle close of saving error dialog.");
+    back();
+  };
+
+  const handleInterviewerErrorClose = () => {
     console.log("Handle close of saving error dialog.");
     back();
   };
@@ -143,6 +163,14 @@ export default function Appointment(props) {
           : (mode === VISUAL_MODE.ERROR_DELETE) ? <Error
               message='Error deleting interview appointment!'
               onClose={handleDeleteErrorClose}
+          />
+          : (mode === VISUAL_MODE.ERROR_NAME_EMPTY) ? <Error
+              message='Error: Name cannot be empty!'
+              onClose={handleNameErrorClose}
+          />
+          : (mode === VISUAL_MODE.ERROR_INTERVIEWER_NOT_SELECTED) ? <Error
+              message='Error: Interviewer must be selected!'
+              onClose={handleInterviewerErrorClose}
           />
           : {}
           )

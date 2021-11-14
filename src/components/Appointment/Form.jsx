@@ -65,6 +65,7 @@ export default function Form(props) {
             type="text"
             value={formState.student}
             placeholder="Enter Student Name"
+            required
             onChange={handleInputChange}
           />
         </form>
