@@ -40,8 +40,6 @@ npm run storybook
 
 ## Screenshots
 
-- !["Registration Page"](https://github.com/smplsoln/scheduler/blob/master/docs/RegistrationPage.png)
-- !["Registration Page"](https://github.com/smplsoln/scheduler/blob/master/docs/RegistrationPage.png)
 - !["1_Create_appointment"](https://github.com/smplsoln/scheduler/blob/master/docs/1_Create_appointment.png)
 - !["2_Saving_appointment_indication"](https://github.com/smplsoln/scheduler/blob/master/docs/2_Saving_appointment_indication.png)
 - !["3_Saved_appointment_slot_filled_remaining_slots_reduced_by_1"](https://github.com/smplsoln/scheduler/blob/master/docs/3_Saved_appointment_slot_filled_remaining_slots_reduced_by_1.png)
