@@ -5,6 +5,7 @@ import InterviewerList from "components/InterviewerList";
 import Button from "components/Button";
 
 export default function Form(props) {
+  const ERROR_MSG_STUDENT_NAME_CANNOT_BE_BLANK = "Student name cannot be blank";
   console.log("Form props: ", {props});
   const studentName = props.student ? props.student : "";
   const interviewers = props.interviewers;
@@ -21,18 +22,19 @@ export default function Form(props) {
     // handleSave();
   };
 
+  const ERROR_MSG_INTERVIEWER_MUST_BE_SELECTED = "Interviewer must be selected!";
   const handleSave = (event) => {
     // console.log("Form Save event: ", event);
     let student = formState.student;
     let interviewer = formState.interviewer;
 
     if (student === "") {
-      setError("Student name cannot be blank");
+      setError(ERROR_MSG_STUDENT_NAME_CANNOT_BE_BLANK);
       return;
     }
 
     if (!interviewer || !interviewer.id) {
-      setError("Interviewer must be selected!");
+      setError(ERROR_MSG_INTERVIEWER_MUST_BE_SELECTED);
       return;
     }
 
@@ -50,9 +52,15 @@ export default function Form(props) {
   };
 
   const handleInputChange = (event) => {
+
     const studentNameInput = event.target.value;
     console.log({ studentNameInput })
     setFormState({ ...formState, student: studentNameInput });
+    // clear prev error if some value is set to student name input
+    if(error === ERROR_MSG_STUDENT_NAME_CANNOT_BE_BLANK
+      && formState.student) {
+      setError("");
+    }
   };
 
   const getInterviewerForId = (state, id) => {
@@ -64,10 +72,14 @@ export default function Form(props) {
   }
 
   const setInterviewer = (updatedInterviewer) => {
+    if(error === ERROR_MSG_INTERVIEWER_MUST_BE_SELECTED) {
+      setError("");
+    }
     console.log("set interviewer: ", updatedInterviewer);
     const selectedInterviewer = getInterviewerForId(formState, updatedInterviewer);
     console.log("Interviewer selected: ", selectedInterviewer);
     setFormState({ ...formState, interviewer: selectedInterviewer})
+    // clear prev error if some value is set to student name input
   };
 
   return (
