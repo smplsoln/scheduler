@@ -22,7 +22,7 @@ export default function Form(props) {
   };
 
   const handleSave = (event) => {
-    console.log("Form Save event: ", event);
+    // console.log("Form Save event: ", event);
     let student = formState.student;
     let interviewer = formState.interviewer;
 
@@ -30,8 +30,18 @@ export default function Form(props) {
       setError("Student name cannot be blank");
       return;
     }
+
+    // validation passed so clear any prev error from error state
+    setError("");
+
     console.log("Calling onSave: ", props.onSave, " with args: ", student, " and interviewer: ", interviewer);
     return props.onSave(student, interviewer);
+  };
+
+  const handleCancel = (event) => {
+    setError("");
+    setFormState({ ...formState, student: "" });
+    return props.onCancel(event);
   };
 
   const handleInputChange = (event) => {
@@ -81,7 +91,7 @@ export default function Form(props) {
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button danger onClick={props.onCancel} >Cancel</Button>
+          <Button danger onClick={handleCancel} >Cancel</Button>
           <Button confirm onClick={handleSave}>Save</Button>
         </section>
       </section>
