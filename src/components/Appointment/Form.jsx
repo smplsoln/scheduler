@@ -31,6 +31,11 @@ export default function Form(props) {
       return;
     }
 
+    if (!interviewer || !interviewer.id) {
+      setError("Interviewer must be selected!");
+      return;
+    }
+
     // validation passed so clear any prev error from error state
     setError("");
 
