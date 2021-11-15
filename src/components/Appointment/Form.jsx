@@ -8,7 +8,9 @@ export default function Form(props) {
   console.log("Form props: ", {props});
   const studentName = props.student ? props.student : "";
   const interviewers = props.interviewers;
-  const selectedInterviewer = props.interviewer;
+  const selectedInterviewer = props.interviewer || null;
+
+  const [error, setError] = useState("");
 
   const [formState, setFormState] = useState({ interviewers: interviewers, interviewer: selectedInterviewer, student: studentName });
   console.log("Form state: ", {formState});
@@ -24,6 +26,11 @@ export default function Form(props) {
     let student = formState.student;
     let interviewer = formState.interviewer;
 
+    if (student === "") {
+      setError("Student name cannot be blank");
+      return;
+    }
+    console.log("Calling onSave: ", props.onSave, " with args: ", student, " and interviewer: ", interviewer);
     return props.onSave(student, interviewer);
   };
 
@@ -55,6 +62,7 @@ export default function Form(props) {
         {/* <form autoComplete="off" onkeydown="return event.key = 'Enter';"> */}
         <form autoComplete="off" onSubmit={handleFormSubmit}>
           <input
+            data-testid="student-name-input"
             className="appointment__create-input text--semi-bold"
             name="name"
             type="text"
@@ -64,6 +72,7 @@ export default function Form(props) {
             onChange={handleInputChange}
           />
         </form>
+        <section className="appointment__validation">{error}</section>
         <InterviewerList
           interviewers={interviewers}
           value={formState.interviewer}
