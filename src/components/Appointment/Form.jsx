@@ -6,6 +6,8 @@ import Button from "components/Button";
 
 export default function Form(props) {
   const ERROR_MSG_STUDENT_NAME_CANNOT_BE_BLANK = "Student name cannot be blank";
+  const ERROR_MSG_INTERVIEWER_MUST_BE_SELECTED = "Interviewer must be selected!";
+
   console.log("Form props: ", {props});
   const studentName = props.student ? props.student : "";
   const interviewers = props.interviewers;
@@ -22,7 +24,6 @@ export default function Form(props) {
     // handleSave();
   };
 
-  const ERROR_MSG_INTERVIEWER_MUST_BE_SELECTED = "Interviewer must be selected!";
   const handleSave = (event) => {
     // console.log("Form Save event: ", event);
     let student = formState.student;
