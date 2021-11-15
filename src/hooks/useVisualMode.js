@@ -3,7 +3,8 @@ import { useState } from "react";
 
 const useVisualMode = (initMode) => {
   const [mode, setMode] = useState(initMode);
-  const [prevMode, setPrevMode] = useState([]);
+  // const [prevMode, setPrevMode] = useState([]);
+  const [prevMode] = useState([]);
 
   console.log({mode});
   console.log({prevMode});

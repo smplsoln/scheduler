@@ -27,11 +27,6 @@ export default function Form(props) {
     return props.onSave(student, interviewer);
   };
 
-  const handleCancel = () => {
-    setFormState({});
-    return props.onCancel();
-  };
-
   const handleInputChange = (event) => {
     const studentNameInput = event.target.value;
     console.log({ studentNameInput })
